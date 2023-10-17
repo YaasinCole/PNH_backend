@@ -14,7 +14,8 @@ def return_home():
     It responds with a JSON message, 'Hello World!'.
     """
     return jsonify({
-        'message': 'Hello World!'
+        'message': 'HelloI am displaying a message',
+        'people': ["Jace", "Harry", "Barry"]
     })
 
 

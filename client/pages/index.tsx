@@ -1,8 +1,31 @@
 import React, { useEffect, useState } from 'react'
 
 function index() {
+  const [message, setMessage] = useState("loading");
+  const [people, setPeople] = useState([]);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8080/api/home").then(
+      response => response.json()
+    ).then((data) => {
+      setMessage(data.message);
+      setPeople(data.people);
+    });
+  }, []);
+
   return (
-    <div>index</div>
+    <div>
+      <div>{message} </div>
+
+      {
+        people.map((person, index) => (
+          <div key={index} >
+            {person}
+          </div>
+        ))
+      }
+    </div>
+
   )
 }
 
