@@ -1,10 +1,15 @@
 import React from 'react'
+import APIService from '@/services/APIService';
 
-function articleList(props: { articles: any[]; editArticle: (article: any) => void }) {
+function articleList(props: { articles: any[]; editArticle: (article: any) => void; deleteArticle: (article: any) => void }) {
 
     const editArticle = (article: any) => {
         props.editArticle(article);
 
+    }
+    const deleteArticle = (article: any) => {
+        APIService.deleteArticle(article.id)
+            .then(() => props.deleteArticle(article))
     }
     return (
         <div>
@@ -21,7 +26,9 @@ function articleList(props: { articles: any[]; editArticle: (article: any) => vo
                                     onClick={() => editArticle(article)}> Update</button>
                             </div>
                             <div className="col">
-                                <button className="btn btn-danger">Delete</button>
+                                <button
+                                    className="btn btn-danger"
+                                    onClick={() => deleteArticle(article)}>Delete</button>
                             </div>
                         </div>
                         <hr />
