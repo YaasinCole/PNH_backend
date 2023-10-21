@@ -13,10 +13,17 @@ function Form(props: any) {
     const [body, setBody] = useState('');
 
     useEffect(() => {
-        // When props.article changes, update the title and body states
+        if (props.article && props.article.title && props.article.body) {
+            setTitle(props.article.title);
+            setBody(props.article.body);
+        }
+    }, []);
+
+    useEffect(() => {
         if (props.article && props.article.length > 0) {
-            setTitle(props.article[0].title || '');
-            setBody(props.article[0].body || '');
+
+            setTitle(props.article.title);
+            setBody(props.article.body);
         }
     }, [props.article]);
 
@@ -28,9 +35,6 @@ function Form(props: any) {
         setBody(e.target.value);
     };
 
-    console.log('props.article: ', props.article);
-    console.log('title: ', title);
-    console.log('body: ', body);
     return (
         <div>
             {props.article ? (
