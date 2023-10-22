@@ -8,8 +8,8 @@ from flask_marshmallow import Marshmallow
 app = Flask(__name__)
 CORS(app)
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:''@localhost:3308/flasktrial'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://:root@mysql-container:3306/flasktrial'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:''@localhost:3308/flasktrial'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://:root@mysql-container:3306/flasktrial'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -95,11 +95,6 @@ def article_delete(id):
     db.session.commit()
 
     return article_schema.jsonify(article)
-
-
-# @app.route('/')
-# def serve_react_app():
-   # return send_from_directory('client/.next', 'server/pages/index.html')
 
 
 if __name__ == '__main__':

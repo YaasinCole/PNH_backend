@@ -1,9 +1,7 @@
-const apiUrl = process.env.REACT_APP_API_URL;
-
 const APIService = {
 
     updateArticle: (id: any, body: any) => {
-        return fetch(`${apiUrl}/update/${id}/`, {
+        return fetch(`http://127.0.0.1:8080/update/${id}/`, {
             method: 'PUT',
             headers: {
                 Accept: 'application/json',
@@ -15,7 +13,7 @@ const APIService = {
     },
 
     insertArticle: (body: any) => {
-        return fetch(`${apiUrl}/add`, {
+        return fetch(`http://127.0.0.1:8080/add`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -27,7 +25,7 @@ const APIService = {
     },
 
     deleteArticle: (id: any) => {
-        return fetch(`${apiUrl}/delete/${id}/`, {
+        return fetch(`http://127.0.0.1:8080/delete/${id}/`, {
             method: 'DELETE',
             headers: {
                 Accept: 'application/json',

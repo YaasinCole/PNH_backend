@@ -15,10 +15,9 @@ interface Article {
 function Index() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [editedArticle, setEditedArticle] = useState<Article[]>([]);
-  const apiUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    fetch('${apiUrl}/get', {
+    fetch('http://127.0.0.1:8080/get', {
       'method': 'GET',
       headers: {
         'Accept': 'application/json'
