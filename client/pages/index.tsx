@@ -11,13 +11,14 @@ interface Article {
   date: string;
 }
 
+
 function Index() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [editedArticle, setEditedArticle] = useState<Article[]>([]);
-
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8080/get", {
+    fetch('${apiUrl}/get', {
       'method': 'GET',
       headers: {
         'Accept': 'application/json'
