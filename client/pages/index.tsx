@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import ArticleList from './Component/articleList'
 import Form from './Component/form'
+import Link from 'next/link'
 
 
 interface Article {
@@ -70,6 +71,7 @@ function Index() {
     <div className='Index'>
       <div className="row">
         <div className="col">
+
           <h1>YAY </h1>
         </div>
         <div className="col">
@@ -77,12 +79,22 @@ function Index() {
             className="btn btn-success"
             onClick={openForm}
           >Inseert Article</button>
+
+
+          <div className="attempt">
+            <Link href='/login'>
+              <button className="btn btn-primary"> Login Page</button>
+            </Link>
+
+          </div>
         </div>
       </div>
       <ArticleList articles={articles} editArticle={editArticle} deleteArticle={deleteArticle} />
       {editedArticle.length > 0 ? (
         <Form article={editedArticle[0]} updateArticleData={updateArticleData} insertArticleData={insertedArticle} />
-      ) : null}    </div>
+      ) : null}
+
+    </div>
   );
 }
 

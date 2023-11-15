@@ -1,5 +1,6 @@
 import React from 'react'
 import APIService from '@/services/APIService';
+import Link from 'next/link'
 
 function articleList(props: { articles: any[]; editArticle: (article: any) => void; deleteArticle: (article: any) => void }) {
 
@@ -33,8 +34,6 @@ function articleList(props: { articles: any[]; editArticle: (article: any) => vo
                         </div>
                         <hr />
                     </div>
-
-
                 )
             })}
         </div>

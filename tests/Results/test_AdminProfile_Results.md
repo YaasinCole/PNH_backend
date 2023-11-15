@@ -9,7 +9,7 @@
 - Test Data Preparation: MySQL test database
 - Browsers Tested: Chrome, Firefox, Microsoft Edge
 - Test Execution Status: Pass
-- Test Duration: 5 mins
+- Test Duration: 5 minsa
 
 ## Test Execution Results
 - Test Step 1: User navigates to add page.

@@ -1,44 +1,39 @@
 """Importing all neccessary Flask that will help us run our app"""
-import datetime
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request, session
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
+from models import db, ma, User, Articles, ArticleSchema, UserSchema, Location, locationSchema
+from flask_login import LoginManager
+from flask_bcrypt import Bcrypt
+from config import Config
+
 
 app = Flask(__name__)
-CORS(app)
+app.config.from_object(Config)
+CORS(app, supports_credentials=True)
+bcrypt = Bcrypt(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:''@localhost:3308/flasktrial'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://:root@mysql-container:3306/flasktrial'
+db.init_app(app)
+ma.init_app(app)
 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-ma = Marshmallow(app)
-db = SQLAlchemy(app)
-
-
-class Articles(db.Model):
-
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100))
-    body = db.Column(db.Text)
-    date = db.Column(db.DateTime, default=datetime.datetime.now)
-
-    def __init__(self, title, body):
-        self.title = title
-        self.body = body
-
-
-class ArticleSchema(ma.Schema):
-    class Meta:
-        fields = ('id', 'title', 'body', 'date')
-
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 article_schema = ArticleSchema()
 article_schemas = ArticleSchema(many=True)
 
+user_schema = UserSchema()
+user_schemas = UserSchema(many=True)
+
+location_schema = locationSchema()
+location_schemas = locationSchema(many=True)
+
 with app.app_context():
     db.create_all()
+
+
+@login_manager.user_loader
+def loader_user(user_id):
+    return User.query.get(user_id)
 
 
 @app.route('/get', methods=['GET'])
@@ -95,6 +90,87 @@ def article_delete(id):
     db.session.commit()
 
     return article_schema.jsonify(article)
+
+
+@app.route('/signup', methods=['POST'])
+def signup_user():
+    firstname = request.json['firstName']
+    lastname = request.json['lastName']
+    role = request.json['role']
+    email = request.json['email']
+    password = request.json['password']
+
+    user_exists = User.query.filter_by(email=email).first() is not None
+
+    if user_exists:
+        return jsonify({"error": "User already Esists"}), 400
+
+    hashed_password = bcrypt.generate_password_hash(password)
+    new_user = User(email=email, password=hashed_password,
+                    firstname=firstname, lastname=lastname, role=role)
+    db.session.add(new_user)
+    db.session.commit()
+
+    session['user_id'] = new_user.id
+
+    result = user_schema.dump(new_user)
+
+    return jsonify(result)
+
+
+@app.route('/addlocation', methods=['POST'])
+def add_location():
+    title = request.json['title']
+    firstname = request.json['firstname']
+    lastname = request.json['lastname']
+    email = request.json['email']
+    phonenumber = request.json['phonenumber']
+    latitude = request.json['latitude']
+    longitude = request.json['longitude']
+
+    user_exists = Location.query.filter_by(
+        firstname=firstname).first() is not None
+
+    if user_exists:
+        return jsonify({"error": "User already Esists"}), 400
+
+    new_userlocation = Location(title=title, firstname=firstname, lastname=lastname, email=email,
+                                phonenumber=phonenumber, latitude=latitude, longitude=longitude)
+    db.session.add(new_userlocation)
+    db.session.commit()
+
+    session['user_id'] = new_userlocation.id
+
+    result = location_schema.dump(new_userlocation)
+    print(result)
+    return jsonify(result)
+
+
+@app.route("/login", methods=["POST"])
+def login_user():
+    email = request.json["email"]
+    password = request.json["password"]
+
+    user = User.query.filter_by(email=email).first()
+
+    if user is None:
+        return jsonify({"error": "Unauthorized Access"}), 401
+
+    if not bcrypt.check_password_hash(user.password, password):
+        return jsonify({"error": "Unauthorised"}), 401
+
+    session["user_id"] = user.id
+
+    result = user_schema.dump(user)
+
+    return jsonify(result)
+
+
+@app.route("/getlocations", methods=['GET'])
+def getlocations():
+    all_locations = Location.query.all()
+    results = location_schemas.dump(all_locations)
+    return jsonify(results)
 
 
 if __name__ == '__main__':
