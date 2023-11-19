@@ -6,7 +6,8 @@ load_dotenv()
 
 class Config:
     SECRET_KEY = os.environ["SECRET_KEY"]
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:''@localhost:3308/flasktrial'
+    # SQLALCHEMY_DATABASE_URI = 'mysql://root:''@localhost:3308/flasktrial'
+    SQLALCHEMY_DATABASE_URI = 'mysql://:root@mysql-container:3306/flasktrial'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = True
 
