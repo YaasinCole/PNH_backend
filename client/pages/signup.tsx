@@ -78,7 +78,7 @@ const SignUpPage: React.FC = () => {
                                             <label className="form-label" htmlFor="typePasswordX">Password</label>
                                         </div>
 
-                                        <button className="btn btn-outline-light btn-lg px-5" onClick={() => registerUser()} type="submit">Register</button>
+                                        <Link href="/login"><button className="btn btn-outline-light btn-lg px-5" onClick={() => registerUser()} type="submit">Register</button></Link>
 
                                     </div>
 

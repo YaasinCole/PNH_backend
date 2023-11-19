@@ -1,7 +1,7 @@
 """Importing all neccessary Flask that will help us run our app"""
 from flask import Flask, jsonify, request, session
 from flask_cors import CORS
-from models import db, ma, User, Articles, ArticleSchema, UserSchema, Location, locationSchema
+from models import db, ma, User, UserSchema, Location, locationSchema
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from config import Config
@@ -17,9 +17,6 @@ ma.init_app(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-
-article_schema = ArticleSchema()
-article_schemas = ArticleSchema(many=True)
 
 user_schema = UserSchema()
 user_schemas = UserSchema(many=True)
@@ -43,53 +40,31 @@ def return_home():
 
     It responds with a JSON message, 'Hello World!'.
     """
-    all_articles = Articles.query.all()
-    results = article_schemas.dump(all_articles)
-    return jsonify(results)
+    return jsonify()
 
 
 @app.route('/get/<id>/', methods=['GET'])
 def get_by_id(id):
-    article = Articles.query.get(id)
-    return article_schema.jsonify(article)
-
-
-@app.route('/add', methods=['POST'])
-def add_article():
-    title = request.json['title']
-    body = request.json['body']
-
-    article = Articles(title, body)
-    db.session.add(article)
-    db.session.commit()
-
-    # Serialize the article object
-    result = article_schema.dump(article)
-
-    return jsonify(result)
-
-
-@app.route('/update/<id>/', methods=['PUT'])
-def update_article(id):
-    articles = Articles.query.get(id)
-
-    title = request.json['title']
-    body = request.json['body']
-
-    articles.title = title
-    articles.body = body
-
-    db.session.commit()
-    return article_schema.jsonify(articles)
+    user = User.query.get(id)
+    return user_schema.jsonify(user)
 
 
 @app.route('/delete/<id>/', methods=['DELETE'])
-def article_delete(id):
-    article = Articles.query.get(id)
-    db.session.delete(article)
+def delete_user(id):
+    user = User.query.get(id)
+    db.session.delete(user)
     db.session.commit()
 
-    return article_schema.jsonify(article)
+    return user_schema.jsonify(user)
+
+
+@app.route('/delete/<id>/', methods=['DELETE'])
+def delete_location(id):
+    location = Location.query.get(id)
+    db.session.delete(location)
+    db.session.commit()
+
+    return user_schema.jsonify(location)
 
 
 @app.route('/signup', methods=['POST'])
